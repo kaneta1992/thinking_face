@@ -38,7 +38,7 @@ func TestMax(t *testing.T) {
 	}
 }
 
-func TestDividedByteSlice(t *testing.T) {
+func TestDivideByteSlice(t *testing.T) {
 	cases := []struct {
 		slice    []byte
 		size     int
@@ -51,7 +51,7 @@ func TestDividedByteSlice(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		ret := DividedByteSlice(c.slice, c.size)
+		ret := DivideByteSlice(c.slice, c.size)
 		if len(ret) != len(c.expected) {
 			t.Errorf("This case is unexpected chunk count: %v\n", c)
 			break

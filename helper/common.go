@@ -14,7 +14,7 @@ func Max(x, y int) int {
 	return x
 }
 
-func DividedByteSlice(slice []byte, chunkSize int) [][]byte {
+func DivideByteSlice(slice []byte, chunkSize int) [][]byte {
 	ret := [][]byte{}
 	sliceSize := len(slice)
 	for i := 0; i < sliceSize; i += chunkSize {

@@ -37,7 +37,7 @@ func VideoToBase64Segments(path string) ([]string, int, error) {
 
 	// The amount that can be sent at one time with media/upload is 5mb
 	// https://developer.twitter.com/en/docs/media/upload-media/api-reference/post-media-upload-append.html
-	mediaSegments := DividedByteSlice(binary, 5*1024*1024)
+	mediaSegments := DivideByteSlice(binary, 5*1024*1024)
 	for _, segment := range mediaSegments {
 		ret = append(ret, base64.StdEncoding.EncodeToString(segment))
 	}
