@@ -17,18 +17,30 @@ func CreateThinkBot(key, secretKey, token, secretToken string) *ThinkBot {
 	return &ThinkBot{helper.CreateAPIWrapper(key, secretKey, token, secretToken)}
 }
 
-func updateMediaSubmodule() bool {
+func updateMediaSubmodule() (bool, error) {
 	cmd := exec.Command("git", "pull", "origin", "master")
 	cmd.Dir = "./media"
 	out, err := cmd.Output()
-	CheckIfError(err)
-	return string(out) == "Already up to date.\n"
+	if err != nil {
+		return false, err
+	}
+	return string(out) == "Already up to date.\n", nil
 }
 
-func commitAndPushMediaSubmodule() {
-	exec.Command("git", "add", "./media").Run()
-	exec.Command("git", "commit", "-m", "Update Media Submodule").Run()
-	exec.Command("git", "push", "origin", "HEAD").Run()
+func commitAndPushMediaSubmodule() error {
+	err := exec.Command("git", "add", "./media").Run()
+	if err != nil {
+		return err
+	}
+	err = exec.Command("git", "commit", "-m", "Update Media Submodule").Run()
+	if err != nil {
+		return err
+	}
+	err = exec.Command("git", "push", "origin", "HEAD").Run()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func getRandomMediaPath() string {
@@ -48,7 +60,7 @@ func (bot *ThinkBot) StartReplyBot() {
 				tweet := v
 				go func() {
 					_, err := bot.wrapper.ReplyWithMedia(generateMessage(), getRandomMediaPath(), tweet)
-					helper.CheckIfError(err)
+					helper.CheckIfErrorLog(err)
 				}()
 			}
 		}
@@ -57,7 +69,13 @@ func (bot *ThinkBot) StartReplyBot() {
 
 func (bot *ThinkBot) StartTweetBot() {
 	go func() {
-		_, err := bot.wrapper.TweetWithMedia(generateMessage(), getRandomMediaPath())
-		helper.CheckIfError(err)
+		updated, err := updateMediaSubmodule()
+		helper.CheckIfErrorLog(err)
+		if updated {
+			err = commitAndPushMediaSubmodule()
+			helper.CheckIfErrorLog(err)
+		}
+		_, err = bot.wrapper.TweetWithMedia(generateMessage(), getRandomMediaPath())
+		helper.CheckIfErrorLog(err)
 	}()
 }

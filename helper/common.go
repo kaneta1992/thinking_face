@@ -13,6 +13,12 @@ func CheckIfError(err error) {
 	}
 }
 
+func CheckIfErrorLog(err error) {
+	if err != nil {
+		log.Println(err)
+	}
+}
+
 func Min(x, y int) int {
 	if x > y {
 		return y
