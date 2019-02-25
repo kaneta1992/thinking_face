@@ -2,6 +2,7 @@ package thinkbot
 
 import (
 	"math/rand"
+	"os/exec"
 	"strings"
 
 	"github.com/ChimeraCoder/anaconda"
@@ -14,6 +15,20 @@ type ThinkBot struct {
 
 func CreateThinkBot(key, secretKey, token, secretToken string) *ThinkBot {
 	return &ThinkBot{helper.CreateAPIWrapper(key, secretKey, token, secretToken)}
+}
+
+func updateMediaSubmodule() bool {
+	cmd := exec.Command("git", "pull", "origin", "master")
+	cmd.Dir = "./media"
+	out, err := cmd.Output()
+	CheckIfError(err)
+	return string(out) == "Already up to date.\n"
+}
+
+func commitAndPushMediaSubmodule() {
+	exec.Command("git", "add", "./media").Run()
+	exec.Command("git", "commit", "-m", "Update Media Submodule").Run()
+	exec.Command("git", "push", "origin", "HEAD").Run()
 }
 
 func getRandomMediaPath() string {
