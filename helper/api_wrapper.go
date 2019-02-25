@@ -2,7 +2,6 @@ package helper
 
 import (
 	"fmt"
-	"log"
 	"net/url"
 	"path/filepath"
 
@@ -85,7 +84,6 @@ func (w *APIWrapper) ReplyWithMedia(message string, path string, tweet anaconda.
 	id, err := w.uploadMedia(path)
 	if err != nil {
 		return anaconda.Tweet{}, err
-		log.Fatal(err)
 	}
 	v.Add("media_ids", id)
 	v.Add("in_reply_to_status_id", tweet.IdStr)

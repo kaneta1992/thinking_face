@@ -13,6 +13,10 @@ func CreateThinkBot(key, secretKey, token, secretToken string) *ThinkBot {
 	return &ThinkBot{helper.CreateAPIWrapper(key, secretKey, token, secretToken)}
 }
 
+func getRandomMediaPath() string {
+	return helper.RandomSelect(helper.DirWalk("./media"))
+}
+
 func (bot *ThinkBot) StartReplyBot() {
 	go func() {
 		s := bot.wrapper.GetTrackPublicStreamFilter("@thinkbott")
@@ -21,7 +25,8 @@ func (bot *ThinkBot) StartReplyBot() {
 			case anaconda.Tweet:
 				tweet := v
 				go func() {
-					bot.wrapper.ReplyWithMedia("thikning...", "c:/Users/kanet/Downloads/smug_face_anim.gif", tweet)
+					_, err := bot.wrapper.ReplyWithMedia("thikning...", getRandomMediaPath(), tweet)
+					helper.CheckIfError(err)
 				}()
 			}
 		}
@@ -30,6 +35,7 @@ func (bot *ThinkBot) StartReplyBot() {
 
 func (bot *ThinkBot) StartTweetBot() {
 	go func() {
-		bot.wrapper.TweetWithMedia("", "c:/Users/kanet/Downloads/thinking_face.mp4")
+		_, err := bot.wrapper.TweetWithMedia("", getRandomMediaPath())
+		helper.CheckIfError(err)
 	}()
 }

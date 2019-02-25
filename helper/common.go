@@ -2,9 +2,16 @@ package helper
 
 import (
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"path/filepath"
 )
+
+func CheckIfError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func Min(x, y int) int {
 	if x > y {
