@@ -97,29 +97,8 @@ func (w *APIWrapper) ReplyWithMedia(message string, path string, tweet anaconda.
 	return w.client.PostTweet("@"+tweet.User.ScreenName+" "+message, v)
 }
 
-func (w *APIWrapper) getPublicStreamFilterMention() *anaconda.Stream {
+func (w *APIWrapper) GetTrackPublicStreamFilter(track string) *anaconda.Stream {
 	v := url.Values{}
-	v.Set("track", "@thinkbott")
+	v.Set("track", track)
 	return w.client.PublicStreamFilter(v)
-}
-
-func (w *APIWrapper) StartReplyBot() {
-	go func() {
-		s := w.getPublicStreamFilterMention()
-		for t := range s.C {
-			switch v := t.(type) {
-			case anaconda.Tweet:
-				tweet := v
-				go func() {
-					w.ReplyWithMedia("thikning...", "c:/Users/kanet/Downloads/smug_face_anim.gif", tweet)
-				}()
-			}
-		}
-	}()
-}
-
-func (w *APIWrapper) StartTweetBot() {
-	go func() {
-		w.TweetWithMedia("", "c:/Users/kanet/Downloads/thinking_face.mp4")
-	}()
 }
