@@ -61,7 +61,7 @@ func (w *APIWrapper) uploadVideo(path string) (string, error) {
 func (w *APIWrapper) uploadMedia(path string) (string, error) {
 	ext := filepath.Ext(path)
 	switch ext {
-	case ".gif", ".jpeg", "jpg", "png":
+	case ".gif", ".jpeg", ".jpg", ".png":
 		return w.uploadImage(path)
 	case ".mp4":
 		return w.uploadVideo(path)
