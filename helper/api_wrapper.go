@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"fmt"
+	"log"
 	"net/url"
 	"path/filepath"
 
@@ -60,6 +60,7 @@ func (w *APIWrapper) uploadVideo(path string) (string, error) {
 
 func (w *APIWrapper) uploadMedia(path string) (string, error) {
 	ext := filepath.Ext(path)
+	log.Println(path)
 	switch ext {
 	case ".gif", ".jpeg", ".jpg", ".png":
 		return w.uploadImage(path)
@@ -80,6 +81,10 @@ func (w *APIWrapper) TweetWithMedia(message string, path string) (anaconda.Tweet
 }
 
 func (w *APIWrapper) ReplyWithMedia(message string, path string, tweet anaconda.Tweet) (anaconda.Tweet, error) {
+	// debug
+	log.Printf("%-15s: %s\n", tweet.User.ScreenName, tweet.Text)
+	log.Printf("%s\n", tweet.IdStr)
+
 	v := url.Values{}
 	id, err := w.uploadMedia(path)
 	if err != nil {
@@ -87,10 +92,6 @@ func (w *APIWrapper) ReplyWithMedia(message string, path string, tweet anaconda.
 	}
 	v.Add("media_ids", id)
 	v.Add("in_reply_to_status_id", tweet.IdStr)
-
-	// debug
-	fmt.Printf("%-15s: %s\n", tweet.User.ScreenName, tweet.Text)
-	fmt.Printf("%s\n", tweet.IdStr)
 
 	return w.client.PostTweet("@"+tweet.User.ScreenName+" "+message, v)
 }
